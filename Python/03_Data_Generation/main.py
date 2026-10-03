@@ -4,6 +4,7 @@ from generators.driver_generator import generate_drivers
 from generators.vehicle_generator import generate_vehicles
 from generators.route_generator import generate_routes
 from validators.data_quality import validate_dataframe
+from generators.payment_generator import generate_payments
 
 from config import OUTPUT_PATH
 
@@ -104,7 +105,10 @@ if route_valid:
     )
 
 
+# ==============================
 # Generate Deliveries
+# ==============================
+print("\n>>> STARTING DELIVERY GENERATION <<<")
 deliveries = generate_deliveries(
     customers,
     drivers,
@@ -123,6 +127,31 @@ if delivery_valid:
         OUTPUT_PATH / "Deliveries.csv",
         index=False
     )
-    
-print("\nRoutes Preview:")
-print(routes.head())
+
+
+# ==============================
+# Generate Payments
+# ==============================
+
+payments = generate_payments(
+    deliveries
+)
+
+payment_valid = validate_dataframe(
+    payments,
+    "Payment_ID",
+    "Payments"
+)
+
+if payment_valid:
+    payments.to_csv(
+        OUTPUT_PATH / "Payments.csv",
+        index=False
+    )
+
+
+# ==============================
+# Previews
+# ==============================
+
+print("\n")

@@ -12,16 +12,36 @@ from datetime import date, timedelta
 
 import pandas as pd
 
-from config import NUMBER_OF_DELIVERIES
+from config import (
+    NUMBER_OF_DELIVERIES,
+    START_DATE,
+    END_DATE,
+    COMPLETED_RATE,
+    PENDING_RATE,
+    CANCELLED_RATE
+)
+
+
+# ==============================
+# Delivery Status Configuration
+# ==============================
 
 delivery_statuses = [
     "Completed",
-    "In Transit",
     "Pending",
     "Cancelled"
 ]
-START_DATE = date(2025, 1, 1)
-END_DATE = date(2026, 12, 31)
+
+delivery_status_weights = [
+    COMPLETED_RATE,
+    PENDING_RATE,
+    CANCELLED_RATE
+]
+
+
+# ==============================
+# Generate Deliveries
+# ==============================
 
 def generate_deliveries(
     customers,
@@ -31,6 +51,9 @@ def generate_deliveries(
 ):
 
     deliveries = []
+
+    start_date = date.fromisoformat(START_DATE)
+    end_date = date.fromisoformat(END_DATE)
 
     for i in range(NUMBER_OF_DELIVERIES):
 
@@ -51,21 +74,27 @@ def generate_deliveries(
         route_id = random.choice(
             routes["Route_ID"].tolist()
         )
-        delivery_date = START_DATE + timedelta(
+
+        delivery_date = start_date + timedelta(
             days=random.randint(
                 0,
-                (END_DATE - START_DATE).days
+                (end_date - start_date).days
             )
         )
 
-        status = random.choice(
-            delivery_statuses
-        )
+        # Weighted status distribution
+        status = random.choices(
+            delivery_statuses,
+            weights=delivery_status_weights,
+            k=1
+        )[0]
+
         route = routes[
             routes["Route_ID"] == route_id
         ].iloc[0]
 
         distance_km = route["Distance_KM"]
+
         delivery_time_min = round(
             (distance_km / 45) * 60
             + random.randint(10, 45)
@@ -73,7 +102,10 @@ def generate_deliveries(
 
         delivery_fee = round(
             1500
-            + (distance_km * random.uniform(80, 120)),
+            + (
+                distance_km
+                * random.uniform(80, 120)
+            ),
             2
         )
 
@@ -106,6 +138,3 @@ def generate_deliveries(
         )
 
     return pd.DataFrame(deliveries)
-
-
-    

@@ -7,6 +7,7 @@ Central settings for synthetic logistics data generation.
 
 from pathlib import Path
 
+
 # ==============================
 # Dataset Sizes
 # ==============================
@@ -15,8 +16,8 @@ NUMBER_OF_CUSTOMERS = 500
 NUMBER_OF_DRIVERS = 50
 NUMBER_OF_VEHICLES = 40
 NUMBER_OF_ROUTES = 50
-NUMBER_OF_PAYMENTS = 5
 NUMBER_OF_DELIVERIES = 10000
+
 
 # ==============================
 # Date Range
@@ -24,6 +25,7 @@ NUMBER_OF_DELIVERIES = 10000
 
 START_DATE = "2025-01-01"
 END_DATE = "2026-12-31"
+
 
 # ==============================
 # Project Paths
@@ -37,6 +39,7 @@ OUTPUT_PATH = (
     / "Raw"
     / "Generated_Data"
 )
+
 
 # ==============================
 # Delivery Status Distribution
